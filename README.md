@@ -107,11 +107,31 @@ The purpose of this example is to provide details as to how one would go about u
     end
     ```
 
-6.  update the `host`, `username`, or `password` settings as necessary which
-    appear at the top of the following file(s):
+6.  update the `host`, `username`, and `password` settings within `config/database.yml`:
 
-    ```text
-    config/database.yaml
+    replace
+
+    ```yml
+    default: &default
+      adapter: postgresql
+      encoding: unicode
+      # For details on connection pooling, see Rails configuration guide
+      # https://guides.rubyonrails.org/configuring.html#database-pooling
+      pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    ```
+
+    with
+
+    ```yml
+    default: &default
+      adapter: postgresql
+      encoding: unicode
+      # For details on connection pooling, see Rails configuration guide
+      # https://guides.rubyonrails.org/configuring.html#database-pooling
+      pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+      host: <%= ENV.fetch("POSTGRES_HOST") { 'localhost' } %>
+      username: <%= ENV.fetch("POSTGRES_USER") { 'postgres' } %>
+      password: <%= ENV.fetch("POSTGRES_PASSWORD") { 'password' } %>
     ```
 
 7.  create the database
