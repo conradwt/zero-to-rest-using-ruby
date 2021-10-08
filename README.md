@@ -92,22 +92,21 @@ The purpose of this example is to provide details as to how one would go about u
     bundle add rack-cors
     ```
 
-5.  config CORS by adding the following text after `config.generators.system_tests = nil`
-    within the `config/application.rb`:
+5.  config CORS by adding the following text after within the `config/initializers/cors.rb` file:
 
     ```ruby
-    # Config CORS.
-    config.middleware.insert_before 0, Rack::Cors do
+    Rails.application.config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins '*'
+
         resource '*',
-                 headers: :any,
-                 methods: %i[get post delete put patch options head]
+                headers: :any,
+                methods: %i[get post put patch delete options head]
       end
     end
     ```
 
-6.  update the `host`, `username`, and `password` settings within `config/database.yml`:
+6.  update the `host`, `username`, and `password` settings within `config/database.yml` file:
 
     replace
 
