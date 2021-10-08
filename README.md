@@ -1,4 +1,4 @@
-# Zero to Restful API Using Rails
+# Zero to REST Using Rails
 
 The purpose of this example is to provide details as to how one would go about using REST with the Rails Web Framework. Thus, I have created two major sections which should be self explanatory: Quick Installation and Tutorial Installation.
 
@@ -8,14 +8,14 @@ The purpose of this example is to provide details as to how one would go about u
 
 - PostgreSQL 14.0 or newer
 
-- Ruby 3.0.2 or newer
-
 - Rails 5.2.1 or newer
+
+- Ruby 3.0.2 or newer
 
 ## Communication
 
-- If you **need help**, use [Stack Overflow](http://stackoverflow.com/questions/tagged/graphql). (Tag 'graphql')
-- If you'd like to **ask a general question**, use [Stack Overflow](http://stackoverflow.com/questions/tagged/graphql).
+- If you **need help**, use [Stack Overflow](http://stackoverflow.com/questions/tagged/rails). (Tag 'rails')
+- If you'd like to **ask a general question**, use [Stack Overflow](http://stackoverflow.com/questions/tagged/rails).
 - If you **found a bug**, open an issue.
 - If you **have a feature request**, open an issue.
 - If you **want to contribute**, submit a pull request.
@@ -25,13 +25,13 @@ The purpose of this example is to provide details as to how one would go about u
 1.  clone this repository
 
     ```bash
-    git clone git@github.com:conradwt/zero-to-restful-api-using-rails.git
+    git clone git@github.com:conradwt/zero-to-rest-using-rails.git
     ```
 
 2.  change directory location
 
     ```bash
-    cd zero-to-restful-api-using-rails
+    cd zero-to-rest-using-rails
     ```
 
 3.  install dependencies
@@ -75,13 +75,13 @@ The purpose of this example is to provide details as to how one would go about u
 2.  rename the project directory
 
     ```bash
-    mv zero-rails zero-to-restful-api-using-rails
+    mv zero-rails zero-to-rest-using-rails
     ```
 
 3.  switch to the project directory
 
     ```bash
-    cd zero-to-restful-api-using-rails
+    cd zero-to-rest-using-rails
     ```
 
 4.  update Ruby gem dependencies
@@ -142,7 +142,7 @@ The purpose of this example is to provide details as to how one would go about u
     end
     ```
 
-    Note: For an example, [please see](https://github.com/conradwt/zero-to-restful-api-using-rails/config/initializers/inflections.rb).
+    Note: For an example, [please see](https://github.com/conradwt/zero-to-rest-using-rails/config/initializers/inflections.rb).
 
     b) update `config/routes.rb` by replacing `resources :people` with the following:
 
@@ -152,7 +152,7 @@ The purpose of this example is to provide details as to how one would go about u
     end
     ```
 
-    Note: For an example, [please see](https://github.com/conradwt/zero-to-restful-api-using-rails/config/routes.rb).
+    Note: For an example, [please see](https://github.com/conradwt/zero-to-rest-using-rails/config/routes.rb).
 
     c) create a directory called `api` within the `app/controllers` folder
 
@@ -174,7 +174,7 @@ The purpose of this example is to provide details as to how one would go about u
     end
     ```
 
-    Note: For an example, [please see](https://github.com/conradwt/zero-to-restful-api-using-rails/app/controllers/api/people_controller.rb).
+    Note: For an example, [please see](https://github.com/conradwt/zero-to-rest-using-rails/app/controllers/api/people_controller.rb).
 
 11. replace the generated `Person` model with the following:
 
@@ -290,7 +290,7 @@ Ready to run in production? Please [check our deployment guides](https://guides.
 
 Bug reports and feature requests can be filed with the rest for the Phoenix project here:
 
-- [File Bug Reports and Features](https://github.com/conradwt/zero-to-restful-api-using-phoenix/issues)
+- [File Bug Reports and Features](https://github.com/conradwt/zero-to-rest-using-rails/issues)
 
 ## License
 
