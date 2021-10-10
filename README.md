@@ -87,7 +87,6 @@ The purpose of this example is to provide details as to how one would go about u
 4.  update Ruby gem dependencies
 
     ```zsh
-    bundle remove jbuilder
     bundle add active_model_serializers
     bundle add rack-cors
     ```
