@@ -24,19 +24,19 @@ The purpose of this example is to provide details as to how one would go about u
 
 1.  clone this repository
 
-    ```bash
+    ```zsh
     git clone git@github.com:conradwt/zero-to-rest-using-rails.git
     ```
 
 2.  change directory location
 
-    ```bash
+    ```zsh
     cd zero-to-rest-using-rails
     ```
 
 3.  install dependencies
 
-    ```bash
+    ```zsh
     bundle install
     ```
 
@@ -48,19 +48,19 @@ The purpose of this example is to provide details as to how one would go about u
 
 5.  create, migrate, and seed the database
 
-    ```bash
+    ```zsh
     rails db:setup
     ```
 
 6.  start the server
 
-    ```bash
+    ```zsh
     rails s
     ```
 
 7.  navigate to our application within the browser
 
-    ```bash
+    ```zsh
     open http://localhost:3000
     ```
 
@@ -68,26 +68,25 @@ The purpose of this example is to provide details as to how one would go about u
 
 1.  create the project
 
-    ```bash
+    ```zsh
     rails new zero-rails -d postgresql -T --no-rc --api
     ```
 
 2.  rename the project directory
 
-    ```bash
+    ```zsh
     mv zero-rails zero-to-rest-using-rails
     ```
 
 3.  switch to the project directory
 
-    ```bash
+    ```zsh
     cd zero-to-rest-using-rails
     ```
 
 4.  update Ruby gem dependencies
 
-    ```bash
-    bundle remove jbuilder
+    ```zsh
     bundle add active_model_serializers
     bundle add rack-cors
     ```
@@ -135,19 +134,19 @@ The purpose of this example is to provide details as to how one would go about u
 
 7.  create the database
 
-    ```bash
+    ```zsh
     rails db.create
     ```
 
 8.  generate an API for representing our `Person` resource
 
-    ```bash
+    ```zsh
     rails g scaffold person first_name last_name username email --api --no-assets
     ```
 
 9.  migrate the database
 
-    ```bash
+    ```zsh
     rails db:migrate
     ```
 
@@ -195,32 +194,32 @@ The purpose of this example is to provide details as to how one would go about u
 
     Note: For an example, [please see](https://github.com/conradwt/zero-to-rest-using-rails/app/controllers/api/people_controller.rb).
 
-11. replace the generated `Person` model with the following:
+11. generate a `Friendship` model which representing our join model:
 
-    ```ruby
-    class Person < ApplicationRecord
-      has_many :friendships, dependent: :destroy
-      has_many :friends, through: :friendships
-    end
-    ```
-
-12. generate a `Friendship` model which representing our join model:
-
-    ```bash
+    ```zsh
     rails g model friendship person:references friend:references
     ```
 
-13. replace `t.references :friend, foreign_key: true`, within migration file,
+12. replace `t.references :friend, foreign_key: true`, within migration file,
     `<some-timestamp>_create_friendships_rb` file with the following:
 
     ```ruby
     t.references :friend, index: true
     ```
 
-14. migrate the database
+13. migrate the database
 
     ```zsh
     rails db:migrate
+    ```
+
+14. replace the generated `Person` model with the following:
+
+    ```ruby
+    class Person < ApplicationRecord
+      has_many :friendships, dependent: :destroy
+      has_many :friends, through: :friendships
+    end
     ```
 
 15. replace the generated `Friendship` model with the following:
