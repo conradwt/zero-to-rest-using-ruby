@@ -209,7 +209,7 @@ The purpose of this example is to provide details as to how one would go about u
 
 13. migrate the database
 
-    ```zsh
+  ```zsh
     rails db:migrate
     ```
 
