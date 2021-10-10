@@ -194,32 +194,32 @@ The purpose of this example is to provide details as to how one would go about u
 
     Note: For an example, [please see](https://github.com/conradwt/zero-to-rest-using-rails/app/controllers/api/people_controller.rb).
 
-11. replace the generated `Person` model with the following:
-
-    ```ruby
-    class Person < ApplicationRecord
-      has_many :friendships, dependent: :destroy
-      has_many :friends, through: :friendships
-    end
-    ```
-
-12. generate a `Friendship` model which representing our join model:
+11. generate a `Friendship` model which representing our join model:
 
     ```zsh
     rails g model friendship person:references friend:references
     ```
 
-13. replace `t.references :friend, foreign_key: true`, within migration file,
+12. replace `t.references :friend, foreign_key: true`, within migration file,
     `<some-timestamp>_create_friendships_rb` file with the following:
 
     ```ruby
     t.references :friend, index: true
     ```
 
-14. migrate the database
+13. migrate the database
 
     ```zsh
     rails db:migrate
+    ```
+
+14. replace the generated `Person` model with the following:
+
+    ```ruby
+    class Person < ApplicationRecord
+      has_many :friendships, dependent: :destroy
+      has_many :friends, through: :friendships
+    end
     ```
 
 15. replace the generated `Friendship` model with the following:
