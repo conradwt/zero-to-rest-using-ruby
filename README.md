@@ -209,31 +209,33 @@ The purpose of this example is to provide details as to how one would go about u
 
 13. migrate the database
 
-````zsh
-  rails db:migrate
-  ```
+    ```zsh
+    rails db:migrate
+    ```
 
 14. replace the generated `Person` model with the following:
 
-  ```ruby
-  class Person < ApplicationRecord
-    has_many :friendships, dependent: :destroy
-    has_many :friends, through: :friendships
-  end
-  ```
+    `app/models/person.rb`:
+
+    ```ruby
+    class Person < ApplicationRecord
+      has_many :friendships, dependent: :destroy
+      has_many :friends, through: :friendships
+    end
+    ```
 
 15. replace the generated `Friendship` model with the following:
 
-  `web/models/friendship.ex`:
+    `app/models/friendship.rb`:
 
-  ```ruby
-  class Friendship < ApplicationRecord
-    belongs_to :person
-    belongs_to :friend, class_name: 'Person'
-  end
-  ```
+    ```ruby
+    class Friendship < ApplicationRecord
+      belongs_to :person
+      belongs_to :friend, class_name: 'Person'
+    end
+    ```
 
-  Note: We want `friend_id` to reference the `people` table because our `friend_id` really represents a `Person` model.
+    Note: We want `friend_id` to reference the `people` table because our `friend_id` really represents a `Person` model.
 
 16. replace `app/controllers/friendships_controller.rb` with the following:
 
@@ -305,62 +307,60 @@ The purpose of this example is to provide details as to how one would go about u
     mv app/controllers/friendships_controller.rb app/controllers/api/friendships_controller.rb
     ```
 
-18. update the contents of the seeds file to the following:
+18. update the contents of the `db/seeds.rb` file to the following:
 
-  `db/seeds`:
+    ```ruby
+    # reset the datastore
+    Person.destroy_all
 
-  ```ruby
-  # reset the datastore
-  Person.destroy_all
+    # insert people
+    me = Person.create!(first_name: 'Conrad',
+                        last_name: 'Taylor',
+                        email: 'conradwt@gmail.com',
+                        username: 'conradwt')
+    dhh = Person.create!(first_name: 'David',
+                        last_name: 'Heinemeier Hansson',
+                        email: 'dhh@37signals.com',
+                        username: 'dhh')
+    ezra = Person.create!(first_name: 'Ezra',
+                          last_name: 'Zygmuntowicz',
+                          email: 'ezra@merbivore.com',
+                          username: 'ezra')
+    matz = Person.create!(first_name: 'Yukihiro',
+                          last_name: 'Matsumoto',
+                          email: 'matz@heroku.com',
+                          username: 'matz')
 
-  # insert people
-  me = Person.create!(first_name: 'Conrad',
-                      last_name: 'Taylor',
-                      email: 'conradwt@gmail.com',
-                      username: 'conradwt')
-  dhh = Person.create!(first_name: 'David',
-                      last_name: 'Heinemeier Hansson',
-                      email: 'dhh@37signals.com',
-                      username: 'dhh')
-  ezra = Person.create!(first_name: 'Ezra',
-                        last_name: 'Zygmuntowicz',
-                        email: 'ezra@merbivore.com',
-                        username: 'ezra')
-  matz = Person.create!(first_name: 'Yukihiro',
-                        last_name: 'Matsumoto',
-                        email: 'matz@heroku.com',
-                        username: 'matz')
+    me.friendships.create!(person_id: me.id, friend_id: matz.id)
 
-  me.friendships.create!(person_id: me.id, friend_id: matz.id)
+    dhh.friendships.create!(person_id: dhh.id, friend_id: ezra.id)
+    dhh.friendships.create!(person_id: dhh.id, friend_id: matz.id)
 
-  dhh.friendships.create!(person_id: dhh.id, friend_id: ezra.id)
-  dhh.friendships.create!(person_id: dhh.id, friend_id: matz.id)
+    ezra.friendships.create!(person_id: ezra.id, friend_id: dhh.id)
+    ezra.friendships.create!(person_id: ezra.id, friend_id: matz.id)
 
-  ezra.friendships.create!(person_id: ezra.id, friend_id: dhh.id)
-  ezra.friendships.create!(person_id: ezra.id, friend_id: matz.id)
+    matz.friendships.create!(person_id: matz.id, friend_id: me.id)
+    matz.friendships.create!(person_id: matz.id, friend_id: ezra.id)
+    matz.friendships.create!(person_id: matz.id, friend_id: dhh.id)
+    ```
 
-  matz.friendships.create!(person_id: matz.id, friend_id: me.id)
-  matz.friendships.create!(person_id: matz.id, friend_id: ezra.id)
-  matz.friendships.create!(person_id: matz.id, friend_id: dhh.id)
-  ```
+19. seed the database
 
-17. seed the database
+    ```zsh
+    rails db:seed
+    ```
 
-  ```zsh
-  rails db:seed
-  ```
+20. start the server
 
-18. start the server
+    ```zsh
+    rails s
+    ```
 
-  ```zsh
-  rails s
-  ```
+21. navigate to our application within the browser
 
-19. navigate to our application within the browser
-
-  ```zsh
-  open http://localhost:3000/api/people
-  ```
+    ```zsh
+    open http://localhost:3000/api/people
+    ```
 
 ## Production Setup
 
@@ -387,4 +387,3 @@ Zero to Restful API Using Phoenix is released under the [MIT license](https://mi
 ## Copyright
 
 copyright:: (c) Copyright 2021 Conrad Taylor. All Rights Reserved.
-````
