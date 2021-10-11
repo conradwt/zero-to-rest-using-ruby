@@ -245,19 +245,19 @@ The purpose of this example is to provide details as to how one would go about u
         before_action :set_person
         before_action :set_friendship, only: %i[show update destroy]
 
-        # GET /friendships
+        # GET /api/people/:person_id/friendships
         def index
           @friendships = @person.friendships.all
 
           render json: @friendships
         end
 
-        # GET /friendships/1
+        # GET /api/people/:person_id/friendships/:id
         def show
           render json: @friendship
         end
 
-        # POST /friendships
+        # POST /api/people/:person_id/friendships
         def create
           @friendship = Friendship.new(friendship_params)
 
@@ -268,7 +268,7 @@ The purpose of this example is to provide details as to how one would go about u
           end
         end
 
-        # PATCH/PUT /people/1
+        # PATCH/PUT /api/people/:person_id/friendships/:id
         def update
           if @friendship&.update(friendship_params)
             render json: @friendship
@@ -277,7 +277,7 @@ The purpose of this example is to provide details as to how one would go about u
           end
         end
 
-        # DELETE /people/1
+        # DELETE /api/people/:person_id/friendships/:id
         def destroy
           @friendship&.destroy
         end
