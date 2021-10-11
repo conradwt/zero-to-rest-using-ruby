@@ -194,10 +194,10 @@ The purpose of this example is to provide details as to how one would go about u
 
     Note: For an example, [please see](https://github.com/conradwt/zero-to-rest-using-rails/app/controllers/api/people_controller.rb).
 
-11. generate a `Friendship` model which representing our join model:
+11. generate an API for representing our `Friendship` resource
 
     ```zsh
-    rails g model friendship person:references friend:references
+    rails g scaffold friendship person:references friend:references --api --no-assets
     ```
 
 12. replace `t.references :friend, foreign_key: true`, within migration file,
@@ -235,7 +235,77 @@ The purpose of this example is to provide details as to how one would go about u
 
   Note: We want `friend_id` to reference the `people` table because our `friend_id` really represents a `Person` model.
 
-16. update the contents of the seeds file to the following:
+16. replace `app/controllers/friendships_controller.rb` with the following:
+
+    ```ruby
+    module API
+      class FriendshipsController < ApplicationController
+        before_action :set_person
+        before_action :set_friendship, only: %i[show update destroy]
+
+        # GET /friendships
+        def index
+          @friendships = @person.friendships.all
+
+          render json: @friendships
+        end
+
+        # GET /friendships/1
+        def show
+          render json: @friendship
+        end
+
+        # POST /friendships
+        def create
+          @friendship = Friendship.new(friendship_params)
+
+          if @friendship&.save
+            render json: @friendship, status: :created, location: @friendship
+          else
+            render json: @friendship.errors, status: :unprocessable_entity
+          end
+        end
+
+        # PATCH/PUT /people/1
+        def update
+          if @friendship&.update(friendship_params)
+            render json: @friendship
+          else
+            render json: @friendship.errors, status: :unprocessable_entity
+          end
+        end
+
+        # DELETE /people/1
+        def destroy
+          @friendship&.destroy
+        end
+
+        private
+
+        def set_person
+          @person = Person.find_by(id: params[:person_id])
+        end
+
+        # Use callbacks to share common setup or constraints between actions.
+        def set_friendship
+          @friendship = @person.friendships.find_by(id: params[:id])
+        end
+
+        # Only allow a list of trusted parameters through.
+        def friendship_params
+          params.require(:friendship).permit(:person_id, :friend_id)
+        end
+      end
+    end
+    ```
+
+17. move the file, `app/controllers/friendships_controller.rb`
+
+    ```zsh
+    mv app/controllers/friendships_controller.rb app/controllers/api/friendships_controller.rb
+    ```
+
+18. update the contents of the seeds file to the following:
 
   `db/seeds`:
 
