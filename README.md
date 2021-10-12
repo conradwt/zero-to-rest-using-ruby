@@ -60,8 +60,16 @@ The purpose of this example is to provide details as to how one would go about u
 
 7.  navigate to our application within the browser
 
+    list all the people:
+
     ```zsh
     open http://localhost:3000/people
+    ```
+
+    list all the friends for a given person:
+
+    ```zsh
+    open http://localhost:3000/people/1/friendships
     ```
 
 ## Tutorial Installation
@@ -372,8 +380,16 @@ The purpose of this example is to provide details as to how one would go about u
 
 23. navigate to our application within the browser
 
+    list all the people:
+
     ```zsh
-    open http://localhost:3000/api/people
+    open http://localhost:3000/people
+    ```
+
+    list all the friendships for a given person:
+
+    ```zsh
+    open http://localhost:3000/people/1/friendships
     ```
 
 ## Production Setup
