@@ -17,7 +17,7 @@ module API
 
     # POST /api/people/:person_id/friendships
     def create
-      @friendship = Friendship.new(friendship_params)
+      @friendship = @person.friendships.new(friendship_params)
 
       if @friendship&.save
         render json: @friendship, status: :created, location: @friendship

@@ -91,7 +91,13 @@ The purpose of this example is to provide details as to how one would go about u
     bundle add rack-cors
     ```
 
-5.  config CORS by adding the following text after within the `config/initializers/cors.rb` file:
+5.  add active model serializer initializer by adding the following text within the `config/initializers/active_model_serializer.rb` file:
+
+    ```ruby
+    ActiveModelSerializers.config.adapter = :json_api
+    ```
+
+6.  add CORS initializer by adding the following text within the `config/initializers/cors.rb` file:
 
     ```ruby
     Rails.application.config.middleware.insert_before 0, Rack::Cors do
@@ -105,7 +111,7 @@ The purpose of this example is to provide details as to how one would go about u
     end
     ```
 
-6.  update the `host`, `username`, and `password` settings within `config/database.yml` file:
+7.  update the `host`, `username`, and `password` settings within `config/database.yml` file:
 
     replace
 
@@ -132,25 +138,25 @@ The purpose of this example is to provide details as to how one would go about u
       password: <%= ENV.fetch("POSTGRES_PASSWORD") { 'password' } %>
     ```
 
-7.  create the database
+8.  create the database
 
     ```zsh
     rails db.create
     ```
 
-8.  generate an API for representing our `Person` resource
+9.  generate an API for representing our `Person` resource
 
     ```zsh
     rails g scaffold person first_name last_name username email --api --no-assets
     ```
 
-9.  migrate the database
+10. migrate the database
 
     ```zsh
     rails db:migrate
     ```
 
-10. put our `PeopleController` within a proper namespace called `API`
+11. put our `PeopleController` within a proper namespace called `API`
 
     a) update `config/initializers/inflections.rb` lines 14 - 16 to the following:
 
@@ -194,26 +200,26 @@ The purpose of this example is to provide details as to how one would go about u
 
     Note: For an example, [please see](https://github.com/conradwt/zero-to-rest-using-rails/app/controllers/api/people_controller.rb).
 
-11. generate an API for representing our `Friendship` resource
+12. generate an API for representing our `Friendship` resource
 
     ```zsh
     rails g scaffold friendship person:references friend:references --api --no-assets
     ```
 
-12. replace `t.references :friend, foreign_key: true`, within migration file,
+13. replace `t.references :friend, foreign_key: true`, within migration file,
     `<some-timestamp>_create_friendships_rb` file with the following:
 
     ```ruby
     t.references :friend, index: true
     ```
 
-13. migrate the database
+14. migrate the database
 
     ```zsh
     rails db:migrate
     ```
 
-14. replace the generated `Person` model with the following:
+15. replace the generated `Person` model with the following:
 
     `app/models/person.rb`:
 
@@ -224,7 +230,7 @@ The purpose of this example is to provide details as to how one would go about u
     end
     ```
 
-15. replace the generated `Friendship` model with the following:
+16. replace the generated `Friendship` model with the following:
 
     `app/models/friendship.rb`:
 
@@ -237,7 +243,7 @@ The purpose of this example is to provide details as to how one would go about u
 
     Note: We want `friend_id` to reference the `people` table because our `friend_id` really represents a `Person` model.
 
-16. replace `app/controllers/friendships_controller.rb` with the following:
+17. replace `app/controllers/friendships_controller.rb` with the following:
 
     ```ruby
     module API
@@ -301,13 +307,21 @@ The purpose of this example is to provide details as to how one would go about u
     end
     ```
 
-17. move the file, `app/controllers/friendships_controller.rb`
+18. move the file, `app/controllers/friendships_controller.rb`
 
     ```zsh
     mv app/controllers/friendships_controller.rb app/controllers/api/friendships_controller.rb
     ```
 
-18. update the contents of the `db/seeds.rb` file to the following:
+19. update the `app/serializers/person_serializer.rb` to the following:
+
+    ```ruby
+    class PersonSerializer < ActiveModel::Serializer
+      attributes :id, :first_name, :last_name, :username, :email
+    end
+    ```
+
+20. update the contents of the `db/seeds.rb` file to the following:
 
     ```ruby
     # reset the datastore
@@ -344,19 +358,19 @@ The purpose of this example is to provide details as to how one would go about u
     matz.friendships.create!(person_id: matz.id, friend_id: dhh.id)
     ```
 
-19. seed the database
+21. seed the database
 
     ```zsh
     rails db:seed
     ```
 
-20. start the server
+22. start the server
 
     ```zsh
     rails s
     ```
 
-21. navigate to our application within the browser
+23. navigate to our application within the browser
 
     ```zsh
     open http://localhost:3000/api/people
