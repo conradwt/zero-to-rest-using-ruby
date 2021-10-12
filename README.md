@@ -40,10 +40,31 @@ The purpose of this example is to provide details as to how one would go about u
     bundle install
     ```
 
-4.  update the `host`, `username`, `password` settings which appear at the top of the following file(s):
+4.  update the `host`, `username`, and `password` settings within `config/database.yml` file:
 
-    ```text
-    config/database.yaml
+    replace
+
+    ```yml
+    default: &default
+      adapter: postgresql
+      encoding: unicode
+      # For details on connection pooling, see Rails configuration guide
+      # https://guides.rubyonrails.org/configuring.html#database-pooling
+      pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    ```
+
+    with
+
+    ```yml
+    default: &default
+      adapter: postgresql
+      encoding: unicode
+      # For details on connection pooling, see Rails configuration guide
+      # https://guides.rubyonrails.org/configuring.html#database-pooling
+      pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+      host: <%= ENV.fetch("POSTGRES_HOST") { 'localhost' } %>
+      username: <%= ENV.fetch("POSTGRES_USER") { 'postgres' } %>
+      password: <%= ENV.fetch("POSTGRES_PASSWORD") { 'password' } %>
     ```
 
 5.  create, migrate, and seed the database
@@ -60,8 +81,16 @@ The purpose of this example is to provide details as to how one would go about u
 
 7.  navigate to our application within the browser
 
+    list all the people:
+
     ```zsh
     open http://localhost:3000/people
+    ```
+
+    list all the friends for a given person:
+
+    ```zsh
+    open http://localhost:3000/people/1/friendships
     ```
 
 ## Tutorial Installation
@@ -91,7 +120,13 @@ The purpose of this example is to provide details as to how one would go about u
     bundle add rack-cors
     ```
 
-5.  config CORS by adding the following text after within the `config/initializers/cors.rb` file:
+5.  add active model serializer initializer by adding the following text within the `config/initializers/active_model_serializer.rb` file:
+
+    ```ruby
+    ActiveModelSerializers.config.adapter = :json_api
+    ```
+
+6.  add CORS initializer by adding the following text within the `config/initializers/cors.rb` file:
 
     ```ruby
     Rails.application.config.middleware.insert_before 0, Rack::Cors do
@@ -105,7 +140,7 @@ The purpose of this example is to provide details as to how one would go about u
     end
     ```
 
-6.  update the `host`, `username`, and `password` settings within `config/database.yml` file:
+7.  update the `host`, `username`, and `password` settings within `config/database.yml` file:
 
     replace
 
@@ -132,25 +167,25 @@ The purpose of this example is to provide details as to how one would go about u
       password: <%= ENV.fetch("POSTGRES_PASSWORD") { 'password' } %>
     ```
 
-7.  create the database
+8.  create the database
 
     ```zsh
     rails db.create
     ```
 
-8.  generate an API for representing our `Person` resource
+9.  generate an API for representing our `Person` resource
 
     ```zsh
     rails g scaffold person first_name last_name username email --api --no-assets
     ```
 
-9.  migrate the database
+10. migrate the database
 
     ```zsh
     rails db:migrate
     ```
 
-10. put our `PeopleController` within a proper namespace called `API`
+11. put our `PeopleController` within a proper namespace called `API`
 
     a) update `config/initializers/inflections.rb` lines 14 - 16 to the following:
 
@@ -194,103 +229,189 @@ The purpose of this example is to provide details as to how one would go about u
 
     Note: For an example, [please see](https://github.com/conradwt/zero-to-rest-using-rails/app/controllers/api/people_controller.rb).
 
-11. generate a `Friendship` model which representing our join model:
+12. generate an API for representing our `Friendship` resource
 
     ```zsh
-    rails g model friendship person:references friend:references
+    rails g scaffold friendship person:references friend:references --api --no-assets
     ```
 
-12. replace `t.references :friend, foreign_key: true`, within migration file,
+13. replace `t.references :friend, foreign_key: true`, within migration file,
     `<some-timestamp>_create_friendships_rb` file with the following:
 
     ```ruby
     t.references :friend, index: true
     ```
 
-13. migrate the database
+14. migrate the database
 
-````zsh
-  rails db:migrate
-  ```
+    ```zsh
+    rails db:migrate
+    ```
 
-14. replace the generated `Person` model with the following:
+15. replace the generated `Person` model with the following:
 
-  ```ruby
-  class Person < ApplicationRecord
-    has_many :friendships, dependent: :destroy
-    has_many :friends, through: :friendships
-  end
-  ```
+    `app/models/person.rb`:
 
-15. replace the generated `Friendship` model with the following:
+    ```ruby
+    class Person < ApplicationRecord
+      has_many :friendships, dependent: :destroy
+      has_many :friends, through: :friendships
+    end
+    ```
 
-  `web/models/friendship.ex`:
+16. replace the generated `Friendship` model with the following:
 
-  ```ruby
-  class Friendship < ApplicationRecord
-    belongs_to :person
-    belongs_to :friend, class_name: 'Person'
-  end
-  ```
+    `app/models/friendship.rb`:
 
-  Note: We want `friend_id` to reference the `people` table because our `friend_id` really represents a `Person` model.
+    ```ruby
+    class Friendship < ApplicationRecord
+      belongs_to :person
+      belongs_to :friend, class_name: 'Person'
+    end
+    ```
 
-16. update the contents of the seeds file to the following:
+    Note: We want `friend_id` to reference the `people` table because our `friend_id` really represents a `Person` model.
 
-  `db/seeds`:
+17. replace `app/controllers/friendships_controller.rb` with the following:
 
-  ```ruby
-  # reset the datastore
-  Person.destroy_all
+    ```ruby
+    module API
+      class FriendshipsController < ApplicationController
+        before_action :set_person
+        before_action :set_friendship, only: %i[show update destroy]
 
-  # insert people
-  me = Person.create!(first_name: 'Conrad',
-                      last_name: 'Taylor',
-                      email: 'conradwt@gmail.com',
-                      username: 'conradwt')
-  dhh = Person.create!(first_name: 'David',
-                      last_name: 'Heinemeier Hansson',
-                      email: 'dhh@37signals.com',
-                      username: 'dhh')
-  ezra = Person.create!(first_name: 'Ezra',
-                        last_name: 'Zygmuntowicz',
-                        email: 'ezra@merbivore.com',
-                        username: 'ezra')
-  matz = Person.create!(first_name: 'Yukihiro',
-                        last_name: 'Matsumoto',
-                        email: 'matz@heroku.com',
-                        username: 'matz')
+        # GET /api/people/:person_id/friendships
+        def index
+          @friendships = @person.friendships.all
 
-  me.friendships.create!(person_id: me.id, friend_id: matz.id)
+          render json: @friendships
+        end
 
-  dhh.friendships.create!(person_id: dhh.id, friend_id: ezra.id)
-  dhh.friendships.create!(person_id: dhh.id, friend_id: matz.id)
+        # GET /api/people/:person_id/friendships/:id
+        def show
+          render json: @friendship
+        end
 
-  ezra.friendships.create!(person_id: ezra.id, friend_id: dhh.id)
-  ezra.friendships.create!(person_id: ezra.id, friend_id: matz.id)
+        # POST /api/people/:person_id/friendships
+        def create
+          @friendship = Friendship.new(friendship_params)
 
-  matz.friendships.create!(person_id: matz.id, friend_id: me.id)
-  matz.friendships.create!(person_id: matz.id, friend_id: ezra.id)
-  matz.friendships.create!(person_id: matz.id, friend_id: dhh.id)
-  ```
+          if @friendship&.save
+            render json: @friendship, status: :created, location: @friendship
+          else
+            render json: @friendship.errors, status: :unprocessable_entity
+          end
+        end
 
-17. seed the database
+        # PATCH/PUT /api/people/:person_id/friendships/:id
+        def update
+          if @friendship&.update(friendship_params)
+            render json: @friendship
+          else
+            render json: @friendship.errors, status: :unprocessable_entity
+          end
+        end
 
-  ```zsh
-  rails db:seed
-  ```
+        # DELETE /api/people/:person_id/friendships/:id
+        def destroy
+          @friendship&.destroy
+        end
 
-18. start the server
+        private
 
-  ```zsh
-  rails s
-  ```
+        def set_person
+          @person = Person.find_by(id: params[:person_id])
+        end
 
-19. navigate to our application within the browser
+        # Use callbacks to share common setup or constraints between actions.
+        def set_friendship
+          @friendship = @person.friendships.find_by(id: params[:id])
+        end
 
-  ```zsh
-  open http://localhost:3000/api/people
-  ```
+        # Only allow a list of trusted parameters through.
+        def friendship_params
+          params.require(:friendship).permit(:person_id, :friend_id)
+        end
+      end
+    end
+    ```
+
+18. move the file, `app/controllers/friendships_controller.rb`
+
+    ```zsh
+    mv app/controllers/friendships_controller.rb app/controllers/api/friendships_controller.rb
+    ```
+
+19. update the `app/serializers/person_serializer.rb` to the following:
+
+    ```ruby
+    class PersonSerializer < ActiveModel::Serializer
+      attributes :id, :first_name, :last_name, :username, :email
+    end
+    ```
+
+20. update the contents of the `db/seeds.rb` file to the following:
+
+    ```ruby
+    # reset the datastore
+    Person.destroy_all
+
+    # insert people
+    me = Person.create!(first_name: 'Conrad',
+                        last_name: 'Taylor',
+                        email: 'conradwt@gmail.com',
+                        username: 'conradwt')
+    dhh = Person.create!(first_name: 'David',
+                        last_name: 'Heinemeier Hansson',
+                        email: 'dhh@37signals.com',
+                        username: 'dhh')
+    ezra = Person.create!(first_name: 'Ezra',
+                          last_name: 'Zygmuntowicz',
+                          email: 'ezra@merbivore.com',
+                          username: 'ezra')
+    matz = Person.create!(first_name: 'Yukihiro',
+                          last_name: 'Matsumoto',
+                          email: 'matz@heroku.com',
+                          username: 'matz')
+
+    me.friendships.create!(person_id: me.id, friend_id: matz.id)
+
+    dhh.friendships.create!(person_id: dhh.id, friend_id: ezra.id)
+    dhh.friendships.create!(person_id: dhh.id, friend_id: matz.id)
+
+    ezra.friendships.create!(person_id: ezra.id, friend_id: dhh.id)
+    ezra.friendships.create!(person_id: ezra.id, friend_id: matz.id)
+
+    matz.friendships.create!(person_id: matz.id, friend_id: me.id)
+    matz.friendships.create!(person_id: matz.id, friend_id: ezra.id)
+    matz.friendships.create!(person_id: matz.id, friend_id: dhh.id)
+    ```
+
+21. seed the database
+
+    ```zsh
+    rails db:seed
+    ```
+
+22. start the server
+
+    ```zsh
+    rails s
+    ```
+
+23. navigate to our application within the browser
+
+    list all the people:
+
+    ```zsh
+    open http://localhost:3000/people
+    ```
+
+    list all the friendships for a given person:
+
+    ```zsh
+    open http://localhost:3000/people/1/friendships
+    ```
 
 ## Production Setup
 
@@ -312,9 +433,8 @@ Bug reports and feature requests can be filed with the rest for the Phoenix proj
 
 ## License
 
-Zero to Restful API Using Phoenix is released under the [MIT license](https://mit-license.org).
+Zero to Restful API Using Phoenix is released under the [MIT license](./LICENSE.md).
 
 ## Copyright
 
 copyright:: (c) Copyright 2021 Conrad Taylor. All Rights Reserved.
-````

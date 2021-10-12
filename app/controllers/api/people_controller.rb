@@ -2,19 +2,19 @@ module API
   class PeopleController < ApplicationController
     before_action :set_person, only: %i[show update destroy]
 
-    # GET /people
+    # GET /api/people
     def index
       @people = Person.all
 
       render json: @people
     end
 
-    # GET /people/1
+    # GET /api/people/:id
     def show
       render json: @person
     end
 
-    # POST /people
+    # POST /api/people
     def create
       @person = Person.new(person_params)
 
@@ -25,7 +25,7 @@ module API
       end
     end
 
-    # PATCH/PUT /people/1
+    # PATCH/PUT /api/people/:id
     def update
       if @person.update(person_params)
         render json: @person
@@ -34,7 +34,7 @@ module API
       end
     end
 
-    # DELETE /people/1
+    # DELETE /api/people/:id
     def destroy
       @person.destroy
     end
