@@ -1,6 +1,6 @@
-# Zero to REST Using Rails
+# Zero to REST Using Ruby
 
-The purpose of this example is to provide details as to how one would go about using REST with the Rails Web Framework. Thus, I have created two major sections which should be self explanatory: Quick Installation and Tutorial Installation.
+The purpose of this example is to provide details as to how one would go about using REST with the Ruby Language. Thus, I have created two major sections which should be self explanatory: Quick Installation and Tutorial Installation.
 
 ## Getting Started
 
@@ -25,13 +25,13 @@ The purpose of this example is to provide details as to how one would go about u
 1.  clone this repository
 
     ```zsh
-    git clone git@github.com:conradwt/zero-to-rest-using-rails.git
+    git clone git@github.com:conradwt/zero-to-rest-using-ruby.git
     ```
 
 2.  change directory location
 
     ```zsh
-    cd zero-to-rest-using-rails
+    cd zero-to-rest-using-ruby
     ```
 
 3.  install dependencies
@@ -104,13 +104,13 @@ The purpose of this example is to provide details as to how one would go about u
 2.  rename the project directory
 
     ```zsh
-    mv zero-rails zero-to-rest-using-rails
+    mv zero-rails zero-to-rest-using-ruby
     ```
 
 3.  switch to the project directory
 
     ```zsh
-    cd zero-to-rest-using-rails
+    cd zero-to-rest-using-ruby
     ```
 
 4.  update Ruby gem dependencies
@@ -429,7 +429,7 @@ Ready to run in production? Please [check our deployment guides](https://guides.
 
 Bug reports and feature requests can be filed with the rest for the Phoenix project here:
 
-- [File Bug Reports and Features](https://github.com/conradwt/zero-to-rest-using-rails/issues)
+- [File Bug Reports and Features](https://github.com/conradwt/zero-to-rest-using-ruby/issues)
 
 ## License
 
