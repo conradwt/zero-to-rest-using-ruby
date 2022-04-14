@@ -12,7 +12,7 @@ The purpose of this example is to provide details as to how one would go about u
 
 - Ruby 3.1.0 or newer
 
-Note: This tutorial was updated on macOS 11.6.4.
+Note: This tutorial was updated on macOS 12.3.1.
 
 ## Communication
 
