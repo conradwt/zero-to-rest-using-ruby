@@ -6,13 +6,13 @@ The purpose of this example is to provide details as to how one would go about u
 
 ## Software requirements
 
-- PostgreSQL 14.1 or newer
+- PostgreSQL 14.6 or newer
 
-- Rails 6.1.6 or newer
+- Rails 6.1.7 or newer
 
 - Ruby 3.1.2 or newer
 
-Note: This tutorial was updated on macOS 12.4.
+Note: This tutorial was updated on macOS 12.6.
 
 ## Communication
 
