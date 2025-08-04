@@ -6,13 +6,13 @@ The purpose of this example is to provide details as to how one would go about u
 
 ## Software requirements
 
-- PostgreSQL 14.6 or newer
+- PostgreSQL 17.5 or newer
 
-- Rails 6.1.7 or newer
+- Rails 6.1.7.3 or newer
 
-- Ruby 3.1.2 or newer
+- Ruby 3.4.5 or newer
 
-Note: This tutorial was updated on macOS 12.6.
+Note: This tutorial was updated on macOS 26 (Tahoe).
 
 ## Communication
 
@@ -439,4 +439,4 @@ Zero to Restful API Using Phoenix is released under the [MIT license](./LICENSE.
 
 ## Copyright
 
-copyright:: (c) Copyright 2021 - 2022 Conrad Taylor. All Rights Reserved.
+copyright:: (c) Copyright 2021 - 2025 Conrad Taylor. All Rights Reserved.
